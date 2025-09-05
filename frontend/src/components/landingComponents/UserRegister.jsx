@@ -5,9 +5,11 @@ import { MdAddPhotoAlternate } from "react-icons/md";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import NavBar from './NavBar';
+
+// 👇 use centralized API
+import API from "../../api";
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -19,17 +21,13 @@ const schema = yup.object().shape({
 });
 
 const UserRegister = () => {
-
-  const { register, handleSubmit, formState: { errors },
-  } = useForm({
+  const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
   });
-
 
   const handleRegister = async (data) => {
     try {
       const formData = new FormData();
-
       formData.append('name', data.name);
       formData.append('email', data.email);
       formData.append('contact', data.contact);
@@ -37,28 +35,29 @@ const UserRegister = () => {
       formData.append('address', data.address);
       formData.append('profile', data.profile[0]);
 
-      const response = await axios.post('http://localhost:9000/api/user-register', formData, {
+      const response = await API.post('/api/user-register', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      if (response.status === 200) {
-        Swal.fire({
-          title: "Registration Successful",
-          text: response?.data?.message,
-          icon: "success"
-        });
 
-      }
-    } catch (error) {
-  console.error('Registration error:', error);
+      if (response.status === 200) {
   Swal.fire({
-    title: "Registration Failed",
-    text: error.response?.data?.message || "Something went wrong",
-    icon: "error"
+    title: "Registration Successful",
+    text: response.data.message,
+    icon: "success",
   });
 }
+    } catch (error) {
+      console.error('Registration error:', error);
+      Swal.fire({
+        title: "Registration Failed",
+        text: error.response?.data?.message || "Something went wrong",
+        icon: "error"
+      });
+    }
   };
+
   return (
     <>
       <NavBar />
@@ -79,7 +78,6 @@ const UserRegister = () => {
                     {errors.name && <p className="text-danger">{errors.name.message}</p>}
                   </div>
 
-
                   <div className="col-md-6">
                     <label className="form-label">Your Email</label>
                     <div className="input-group">
@@ -88,7 +86,6 @@ const UserRegister = () => {
                     </div>
                     {errors.email && <p className="text-danger">{errors.email.message}</p>}
                   </div>
-
 
                   <div className="col-md-6">
                     <label className="form-label">Phone Number</label>
@@ -99,7 +96,6 @@ const UserRegister = () => {
                     {errors.contact && <p className="text-danger">{errors.contact.message}</p>}
                   </div>
 
-
                   <div className="col-md-6">
                     <label className="form-label">Password</label>
                     <div className="input-group">
@@ -108,8 +104,6 @@ const UserRegister = () => {
                     </div>
                     {errors.password && <p className="text-danger">{errors.password.message}</p>}
                   </div>
-
-
 
                   <div className="col-md-6">
                     <label className="form-label">Address</label>
@@ -120,7 +114,6 @@ const UserRegister = () => {
                     {errors.address && <p className="text-danger">{errors.address.message}</p>}
                   </div>
 
-
                   <div className="col-md-6">
                     <label className="form-label">Profile Picture</label>
                     <div className="input-group">
@@ -129,7 +122,6 @@ const UserRegister = () => {
                     </div>
                     {errors.profile && <p className="text-danger">{errors.profile.message}</p>}
                   </div>
-
 
                   <div className="text-center mt-4">
                     <input type="submit" className="btn px-5 btn-login" value="Register" />

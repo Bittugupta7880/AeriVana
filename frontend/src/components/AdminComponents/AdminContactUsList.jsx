@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import NavBar from '../landingComponents/NavBar'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 const AdminContactUsList = () => {
   const [list, setList] = useState([])
   useEffect(() => {
