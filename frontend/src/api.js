@@ -1,10 +1,9 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL, // dynamic from .env
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
-// Example auth token attach (if needed)
 API.interceptors.request.use((req) => {
   const user = localStorage.getItem("userInfo");
   if (user) {
