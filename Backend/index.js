@@ -1,20 +1,39 @@
 import express from 'express';
-import {dbConnect} from './config/db.js';
+import { dbConnect } from './config/db.js';
 import router from './route/userRoute.js';
-import adminRoute from './route/adminRoute.js'
+import adminRoute from './route/adminRoute.js';
 import fileUpload from 'express-fileupload';
-import cors from 'cors'
+import cors from 'cors';
 import dotenv from "dotenv";
+
 dotenv.config(); 
-const app=express();
+
+const app = express();
+
+// ✅ Allow JSON parsing
 app.use(express.json());
+
+// ✅ File upload
 app.use(fileUpload());
-app.use(cors());
-const PORT=process.env.PORT || 9000; 
+
+// ✅ CORS for frontend
+app.use(cors({
+    origin: "https://aeri-vana.vercel.app", // replace with your Vercel frontend URL
+    credentials: true
+}));
+
+// ✅ Connect DB
 dbConnect();
-app.use('/img',express.static('uploads'));
- app.use('/api',router);
- app.use('/api',adminRoute)
-app.listen(PORT,()=>{
-    console.log("Server running..."); 
-})
+
+// ✅ Static folder
+app.use('/img', express.static('uploads'));
+
+// ✅ Routes
+app.use('/api', router);
+app.use('/api', adminRoute);
+
+// ✅ Start server
+const PORT = process.env.PORT || 9000;
+app.listen(PORT, () => {
+    console.log("Server running...");
+});
