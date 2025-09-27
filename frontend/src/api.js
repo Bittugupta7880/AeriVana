@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://aerivana.onrender.com", // 👈 fix backend URL
+  baseURL: import.meta.env.VITE_API_URL, // ✅ Vercel env variable
 });
 
 API.interceptors.request.use((req) => {
