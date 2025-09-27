@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 import NavBar from './NavBar';
 
 // 👇 use centralized API
-import API from "../../api";
+import API from '../../api';
 
 const schema = yup.object().shape({
   name: yup.string().required(),
