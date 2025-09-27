@@ -1,7 +1,15 @@
-import mongoose from "mongoose"
-export const dbConnect=async()=>{
-const con=await mongoose.connect(process.env.MONGO_URI)
-if(con){
-    console.log("connection succesful")
-}
-}
+import mongoose from "mongoose";
+
+export const dbConnect = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    console.log(`✅ MongoDB connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error("❌ MongoDB connection error:", error.message);
+    process.exit(1); // Exit the app if DB connection fails
+  }
+};
